@@ -1,0 +1,11 @@
+# Eclipse
+bin/
+.settings/
+*.class
+.metadata/
+
+# Configuration sensible
+.env
+
+# Fichier temporaire de modélisation
+*.lo1
