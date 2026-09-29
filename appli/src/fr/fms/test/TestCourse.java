@@ -17,10 +17,18 @@ public class TestCourse {
 
         CourseBusiness business = new CourseBusinessImpl(courseDao, formatDao);
 
+        // Affiche toutes les formations
+		System.out.println("\n----- Test : toutes les formations -----");
         for (Course course : business.getAllCourses()) {
             System.out.println(course);
         }
-
+        
+        // Affiche les formations avec mot clé (Java dans ex.)
+		System.out.println("\n----- Test : toutes les formations avec mot clé Java -----");
+        for (Course course : business.findCoursesByKeyword("Java")) {
+            System.out.println(course);
+        }
+        
         business.closeConnection();
     }
 }

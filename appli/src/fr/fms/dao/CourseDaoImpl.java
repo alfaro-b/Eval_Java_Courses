@@ -108,8 +108,43 @@ public class CourseDaoImpl implements CourseDao{
 	 */
 	@Override
 	public List<Course> findByKeyword(String keyword, Connection connection) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Course> courses = new ArrayList<>();
+
+	    String sql = "SELECT id_course, name, description, duration, price "
+	               + "FROM course "
+	               + "WHERE name LIKE ? OR description LIKE ? "
+	               + "ORDER BY id_course";
+
+	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+	    	// Ajout de % avant et après le mot-clé pour rechercher une occurrence partielle avec LIKE.
+	    	// "%Java%" permet de rechercher "Java" n'importe où dans le texte.
+	        String search = "%" + keyword + "%";
+
+	        ps.setString(1, search);
+	        ps.setString(2, search);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+
+	            while (rs.next()) {
+	                Course course = new Course(
+	                    rs.getInt("id_course"),
+	                    rs.getString("name"),
+	                    rs.getString("description"),
+	                    rs.getInt("duration"),
+	                    rs.getDouble("price"),
+	                    new ArrayList<>()
+	                );
+
+	                courses.add(course);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return courses;
 	}
 
 	/** Recherche les formations disponibles dans un format donné.

@@ -79,8 +79,15 @@ public class CourseBusinessImpl implements CourseBusiness {
      */
 	@Override
 	public List<Course> findCoursesByKeyword(String keyword) {
-		// TODO Auto-generated method stub
-		return null;
+	    List<Course> courses = courseDao.findByKeyword(keyword, connection);
+
+	    for (Course course : courses) {
+	        course.setFormats(
+	            formatDao.findByCourse(course.getIdCourse(), connection)
+	        );
+	    }
+
+	    return courses;
 	}
 
     /** Recherche les formations disponibles dans un format donné.
