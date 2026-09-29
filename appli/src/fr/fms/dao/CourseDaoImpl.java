@@ -155,8 +155,40 @@ public class CourseDaoImpl implements CourseDao{
 	 */
 	@Override
 	public List<Course> findByFormat(int idFormat, Connection connection) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Course> courses = new ArrayList<>();
+	    
+	    String sql = "SELECT course.id_course, course.name, course.description, course.duration, course.price "
+	               + "FROM course "
+	               + "JOIN course_format ON course.id_course = course_format.id_course "
+	               + "WHERE course_format.id_format = ? "
+	               + "ORDER BY course.id_course";
+	    
+	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+
+	        ps.setInt(1, idFormat);
+
+	        try (ResultSet rs = ps.executeQuery()) {
+
+	            while (rs.next()) {
+	                Course course = new Course(
+		                    rs.getInt("id_course"),
+		                    rs.getString("name"),
+		                    rs.getString("description"),
+		                    rs.getInt("duration"),
+		                    rs.getDouble("price"),
+		                    new ArrayList<>()
+	                );
+
+	                courses.add(course);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return courses;
+
 	}
 
 }

@@ -29,6 +29,12 @@ public class TestCourse {
             System.out.println(course);
         }
         
+        // Affiche les formations en fonction de leur format
+		System.out.println("\n----- Test : toutes les formations en fonction du format -----");
+        for (Course course : business.findCoursesByFormat(1)) {
+            System.out.println(course);
+        }
+        
         business.closeConnection();
     }
 }

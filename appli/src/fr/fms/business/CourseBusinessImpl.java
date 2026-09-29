@@ -96,8 +96,15 @@ public class CourseBusinessImpl implements CourseBusiness {
      */
 	@Override
 	public List<Course> findCoursesByFormat(int idFormat) {
-		// TODO Auto-generated method stub
-		return null;
+	    List<Course> courses = courseDao.findByFormat(idFormat, connection);
+
+	    for (Course course : courses) {
+	        course.setFormats(
+	            formatDao.findByCourse(course.getIdCourse(), connection)
+	        );
+	    }
+
+	    return courses;
 	}
 
     /** Ferme la connexion à la base de données.
