@@ -1,5 +1,6 @@
 package fr.fms.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -102,7 +103,19 @@ public class Main {
 	 */
 	private static void displayCourses(List<Course> courses) {
 	    for (Course course : courses) {
-	        System.out.println(course);
+	        System.out.println("----------------------------------");
+	        System.out.println(course.getName());
+	        System.out.println("Description : " + course.getDescription());
+	        System.out.println("Durée : " + course.getDuration() + " jours");
+	        System.out.println("Prix : " + course.getPrice() + " €");
+
+	        List<String> formatNames = new ArrayList<>();
+	        for (Format format : course.getFormats()) {
+	            formatNames.add(format.getName());
+	        }
+	        System.out.println("Formats : " + String.join(", ", formatNames));
+
+	        System.out.println();
 	    }
 	}
 }
