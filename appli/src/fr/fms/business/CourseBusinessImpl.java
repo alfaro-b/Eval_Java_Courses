@@ -8,6 +8,7 @@ import java.util.List;
 import fr.fms.dao.CourseDao;
 import fr.fms.dao.FormatDao;
 import fr.fms.entities.Course;
+import fr.fms.entities.Format;
 
 /** Implementation de la couche métier pour la gestion des formations.
  * Orchestre les DAO CourseDao et FormatDao.
@@ -105,6 +106,14 @@ public class CourseBusinessImpl implements CourseBusiness {
 	    }
 
 	    return courses;
+	}
+	
+	/** Récupère tous les formats.
+	 * @return liste de tous les formats
+	 */
+	@Override
+	public List<Format> getAllFormats() {
+	    return formatDao.findAll(connection);
 	}
 
     /** Ferme la connexion à la base de données.
