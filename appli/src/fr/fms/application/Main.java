@@ -1,6 +1,7 @@
 package fr.fms.application;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,46 +36,51 @@ public class Main {
 
 			// Menu principal de l'application
 			displayMenu();
-
-			int choice = scanner.nextInt();
-			scanner.nextLine();
-
-		    switch (choice) {
-		        case 1:
-		        	// Affichage de toutes les formations
-		            displayCourses(business.getAllCourses());
-		            break;
-
-		        case 2:
-		            // Affichage des formations suite à une recherche par mot clé
-		        	System.out.println("\n===== RECHERCHE PAR MOT CLE =====");
-		    	    System.out.println("Saisissez le mot recherché : ");
-		    	    String keyword = scanner.nextLine();
-		    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
-		            displayCourses(business.findCoursesByKeyword(keyword));
-		            break;
-
-		        case 3:
-		            // Affichage des formations en fonction du format
-		        	List<Format> formats = business.getAllFormats();
-		        	System.out.println("\n===== RECHERCHE PAR FORMAT =====");
-		    	    for (Format format : formats) {
-		    	        System.out.println(format.getIdFormat() + " - " + format.getName());
-		    	    }
-		    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
-		    	    int selectedFormatId = scanner.nextInt();
-		    	    scanner.nextLine();
-		    	    System.out.println("Voici la liste des formations : ");
-		    	    displayCourses(business.findCoursesByFormat(selectedFormatId));
-		            break;
-
-		        case 0:
-		            running = false;
-		            break;
-
-		        default:
-		            System.out.println("Choix invalide.");
-		    }
+			
+			try {
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+	
+			    switch (choice) {
+			        case 1:
+			        	// Affichage de toutes les formations
+			            displayCourses(business.getAllCourses());
+			            break;
+	
+			        case 2:
+			            // Affichage des formations suite à une recherche par mot clé
+			        	System.out.println("\n===== RECHERCHE PAR MOT CLE =====");
+			    	    System.out.println("Saisissez le mot recherché : ");
+			    	    String keyword = scanner.nextLine();
+			    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
+			            displayCourses(business.findCoursesByKeyword(keyword));
+			            break;
+	
+			        case 3:
+			            // Affichage des formations en fonction du format
+			        	List<Format> formats = business.getAllFormats();
+			        	System.out.println("\n===== RECHERCHE PAR FORMAT =====");
+			    	    for (Format format : formats) {
+			    	        System.out.println(format.getIdFormat() + " - " + format.getName());
+			    	    }
+			    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
+			    	    int selectedFormatId = scanner.nextInt();
+			    	    scanner.nextLine();
+			    	    System.out.println("Voici la liste des formations : ");
+			    	    displayCourses(business.findCoursesByFormat(selectedFormatId));
+			            break;
+	
+			        case 0:
+			            running = false;
+			            break;
+	
+			        default:
+			            System.out.println("Choix invalide.");
+			    }
+			} catch (InputMismatchException e) {
+		        System.out.println("Veuillez saisir un nombre valide.");
+		        scanner.nextLine();
+			}
 		}
 
 		business.closeConnection();
