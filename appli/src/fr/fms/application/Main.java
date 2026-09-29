@@ -10,6 +10,7 @@ import fr.fms.dao.CourseDaoImpl;
 import fr.fms.dao.FormatDao;
 import fr.fms.dao.FormatDaoImpl;
 import fr.fms.entities.Course;
+import fr.fms.entities.Format;
 
 /** Point d'entrée de l'application de gestion des formations.
  * Permet à l'utilisateur d'accéder aux différentes fonctionnalités disponibles depuis le menu principal.
@@ -44,13 +45,26 @@ public class Main {
 		            break;
 
 		        case 2:
-		            // demander mot-clé
-		            // business.findCoursesByKeyword(...)
+		            // Affichage des formations suite à une recherche par mot clé
+		        	System.out.println("\n===== RECHERCHE PAR MOT CLE =====");
+		    	    System.out.println("Saisissez le mot recherché : ");
+		    	    String keyword = scanner.nextLine();
+		    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
+		            displayCourses(business.findCoursesByKeyword(keyword));
 		            break;
 
 		        case 3:
-		            // choisir présentiel/distanciel
-		            // business.findCoursesByFormat(...)
+		            // Affichage des formations en fonction du format
+		        	List<Format> formats = business.getAllFormats();
+		        	System.out.println("\n===== RECHERCHE PAR FORMAT =====");
+		    	    for (Format format : formats) {
+		    	        System.out.println(format.getIdFormat() + " - " + format.getName());
+		    	    }
+		    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
+		    	    int selectedFormatId = scanner.nextInt();
+		    	    scanner.nextLine();
+		    	    System.out.println("Voici la liste des formations : ");
+		    	    displayCourses(business.findCoursesByFormat(selectedFormatId));
 		            break;
 
 		        case 0:
