@@ -48,7 +48,7 @@ public class CourseBusinessImpl implements CourseBusiness {
     			e.printStackTrace();
         }
 		
-		String url = "jdbc:mariadb://localhost:3306/courses_sales";
+		String url = "jdbc:mariadb://localhost:3306/courses_sales_v2";
 		String login = "courses_user";
 		String password = "MotDePasseUser";
 		
