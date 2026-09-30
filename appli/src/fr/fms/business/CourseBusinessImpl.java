@@ -67,10 +67,7 @@ public class CourseBusinessImpl implements CourseBusiness {
 	@Override
 	public List<Course> getAllCourses() {
 		List<Course> courses = courseDao.findAll(connection);
-		
-		for(Course course : courses) {
-			course.setFormats(formatDao.findByCourse(course.getIdCourse(), connection));
-		}
+		loadFormats(courses);
 		return courses;
 	}
 
@@ -85,13 +82,7 @@ public class CourseBusinessImpl implements CourseBusiness {
 		}
 		
 	    List<Course> courses = courseDao.findByKeyword(keyword, connection);
-
-	    for (Course course : courses) {
-	        course.setFormats(
-	            formatDao.findByCourse(course.getIdCourse(), connection)
-	        );
-	    }
-
+	    loadFormats(courses);
 	    return courses;
 	}
 
@@ -102,13 +93,7 @@ public class CourseBusinessImpl implements CourseBusiness {
 	@Override
 	public List<Course> findCoursesByFormat(int idFormat) {
 	    List<Course> courses = courseDao.findByFormat(idFormat, connection);
-
-	    for (Course course : courses) {
-	        course.setFormats(
-	            formatDao.findByCourse(course.getIdCourse(), connection)
-	        );
-	    }
-
+	    loadFormats(courses);
 	    return courses;
 	}
 	
@@ -118,6 +103,15 @@ public class CourseBusinessImpl implements CourseBusiness {
 	@Override
 	public List<Format> getAllFormats() {
 	    return formatDao.findAll(connection);
+	}
+	
+	/** Charge et associe les formats à chaque formation de la liste
+	 * @param courses liste des formations à compléter
+	 */
+	private void loadFormats(List<Course> courses) {
+	    for (Course course : courses) {
+	        course.setFormats(formatDao.findByCourse(course.getIdCourse(), connection));
+	    }
 	}
 
     /** Ferme la connexion à la base de données.
