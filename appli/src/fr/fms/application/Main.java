@@ -86,6 +86,7 @@ public class Main {
 			        default:
 			            System.out.println("Choix invalide.");
 			    }
+			    
 			} catch (InputMismatchException e) {
 		        System.out.println("Veuillez saisir un nombre valide.");
 		        scanner.nextLine();
@@ -117,6 +118,12 @@ public class Main {
 	 * @param courses liste des formations à afficher
 	 */
 	private static void displayCourses(List<Course> courses) {
+		
+		if (courses.isEmpty()) {
+			System.out.println("Aucune formation trouvée");
+			return;
+		}
+		
 	    for (Course course : courses) {
 	        System.out.println("----------------------------------");
 	        System.out.println(course.getName());
