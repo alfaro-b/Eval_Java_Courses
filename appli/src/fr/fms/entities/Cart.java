@@ -1,6 +1,7 @@
 package fr.fms.entities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /** Représente un panier contenant les formations sélectionnées.
@@ -55,14 +56,45 @@ public class Cart {
 		}
 	}
 	
-	/** Retire une formation du panier
+	/** Retire une formation du panier ou diminue sa quantité
 	 * @param course formation à retirer
+	 * @param quantity quantité à retirer
 	 */
-	public void removeCourse(Course course) {
+	public void removeCourse(Course course, int quantity) {
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("La quantité doit être supérieure à 0.");
+		}
 		
+		boolean found = false;
+		
+		// Si la formation est bien dans le panier, on modifie la quantité
+		
+		// Utilisation d'un Iterator pour pouvoir supprimer un élément pendant le parcours de la liste
+		Iterator<OrderItem> iterator = items.iterator();
+
+		while (iterator.hasNext()) {
+		    OrderItem orderItem = iterator.next();
+
+		    if (orderItem.getCourse().getIdCourse() == course.getIdCourse()) {
+
+		        if (orderItem.getQuantity() > quantity) {
+		            orderItem.setQuantity(orderItem.getQuantity() - quantity);
+		        } else {
+		            iterator.remove();
+		        }
+
+				found = true;
+				break;
+			}
+		}
+		
+		// Si la formation n'est pas dans le panier
+		if(found == false) {
+			System.out.println("La formation ne figure pas dans le panier actuel.");
+		}
 	}
 	
-	/** Récupère les lignes présente dans le panier.
+	/** Récupère les lignes présentes dans le panier.
 	 * @return liste des lignes du panier
 	 */
 	public List<OrderItem> getItems() {
