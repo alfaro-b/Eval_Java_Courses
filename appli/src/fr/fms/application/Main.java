@@ -63,20 +63,48 @@ public class Main {
 			        case 3:
 			            // Affichage des formations en fonction du format
 			        	List<Format> formats = business.getAllFormats();
+			        	
 			        	System.out.println("\n===== RECHERCHE PAR FORMAT =====");
+			        	
 			    	    for (Format format : formats) {
 			    	        System.out.println(format.getIdFormat() + " - " + format.getName());
 			    	    }
-			    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
-			    	    try {
-			    	    	int selectedFormatId = scanner.nextInt();
-			    	    	scanner.nextLine();
-			    	    	System.out.println("Voici la liste des formations : ");
-			    	    	displayCourses(business.findCoursesByFormat(selectedFormatId));
-			    	    } catch (InputMismatchException e) {
-			    	        System.out.println("Veuillez saisir un numéro de format valide.");
-			    	        scanner.nextLine();
+			    	    
+			    	    boolean validFormat = false;
+			    	    
+			    	    while (!validFormat) {
+				    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
+				    	    
+				    	    try {
+				    	    	int selectedFormatId = scanner.nextInt();
+				    	    	scanner.nextLine();
+				    	    	
+				    	    	// Vérifie que l'identifiant saisi correspond à un format existant
+				    	    	boolean formatExists = false;
+				    	    	
+				    	    	for (Format format : formats) {
+				    	    		if(format.getIdFormat() == selectedFormatId) {
+				    	    			formatExists = true;
+				    	    			break;
+				    	    		}
+				    	    	}
+				    	    	// Si aucun format ne correspond à l'identifiant saisi, on redemande
+				    	    	if (formatExists == false) {
+				    	    		System.out.println("Format invalide. Veuillez réessayer.");
+				    	    		continue;
+				    	    	}
+				    	    	
+				    	    	System.out.println("Voici la liste des formations : ");
+				    	    	displayCourses(business.findCoursesByFormat(selectedFormatId));
+				    	    	
+				    	    	validFormat = true;
+				    	    	
+				    	    } catch (InputMismatchException e) {
+				    	        System.out.println("Veuillez saisir un numéro de format valide.");
+				    	        scanner.nextLine();
+				    	    }
 			    	    }
+			    	    
 			            break;
 	
 			        case 0:
