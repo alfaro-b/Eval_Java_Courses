@@ -81,6 +81,8 @@ public class CourseBusinessImpl implements CourseBusiness {
 			throw new IllegalArgumentException("Le mot clé ne peut pas être vide.");
 		}
 		
+		keyword = keyword.trim();
+		
 	    List<Course> courses = courseDao.findByKeyword(keyword, connection);
 	    loadFormats(courses);
 	    return courses;
