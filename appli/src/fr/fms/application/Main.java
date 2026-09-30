@@ -64,10 +64,15 @@ public class Main {
 			    	        System.out.println(format.getIdFormat() + " - " + format.getName());
 			    	    }
 			    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
+			    	    try {
 			    	    int selectedFormatId = scanner.nextInt();
 			    	    scanner.nextLine();
 			    	    System.out.println("Voici la liste des formations : ");
 			    	    displayCourses(business.findCoursesByFormat(selectedFormatId));
+			    	    } catch (InputMismatchException e) {
+			    	        System.out.println("Veuillez saisir un numéro de format valide.");
+			    	        scanner.nextLine();
+			    	    }
 			            break;
 	
 			        case 0:
