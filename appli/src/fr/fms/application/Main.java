@@ -53,7 +53,11 @@ public class Main {
 			    	    System.out.println("Saisissez le mot recherché : ");
 			    	    String keyword = scanner.nextLine();
 			    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
+			    	    try {
 			            displayCourses(business.findCoursesByKeyword(keyword));
+			    	    } catch(IllegalArgumentException e) {
+			    	    	System.out.println(e.getMessage());
+			    	    }
 			            break;
 	
 			        case 3:
@@ -65,10 +69,10 @@ public class Main {
 			    	    }
 			    	    System.out.println("Quelles formations voulez vous afficher? (Choisissez le n°)");
 			    	    try {
-			    	    int selectedFormatId = scanner.nextInt();
-			    	    scanner.nextLine();
-			    	    System.out.println("Voici la liste des formations : ");
-			    	    displayCourses(business.findCoursesByFormat(selectedFormatId));
+			    	    	int selectedFormatId = scanner.nextInt();
+			    	    	scanner.nextLine();
+			    	    	System.out.println("Voici la liste des formations : ");
+			    	    	displayCourses(business.findCoursesByFormat(selectedFormatId));
 			    	    } catch (InputMismatchException e) {
 			    	        System.out.println("Veuillez saisir un numéro de format valide.");
 			    	        scanner.nextLine();

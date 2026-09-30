@@ -80,6 +80,10 @@ public class CourseBusinessImpl implements CourseBusiness {
      */
 	@Override
 	public List<Course> findCoursesByKeyword(String keyword) {
+		if (keyword == null || keyword.trim().isEmpty()) {
+			throw new IllegalArgumentException("Le mot clé ne peut pas être vide.");
+		}
+		
 	    List<Course> courses = courseDao.findByKeyword(keyword, connection);
 
 	    for (Course course : courses) {
