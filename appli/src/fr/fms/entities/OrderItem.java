@@ -14,6 +14,7 @@ public class OrderItem {
 	private int quantity;
 	private double price;
 	private Course course;
+	private Order order;
 	
     // =========================
     // CONSTRUCTEURS
@@ -29,6 +30,20 @@ public class OrderItem {
 		this.quantity = quantity;
 		this.price = price;
 		this.course = course;
+	}
+	
+	/** Crée une ligne de commande avec une quantité, un prix au moment de la commande, une formation et une commande.
+	 * @param quantity quantité commandée
+	 * @param price prix au moment de la commande
+	 * @param course cours commandé
+	 * @param order commande
+	 * 
+	 */
+	public OrderItem(int quantity, double price, Course course, Order order) {
+		this.quantity = quantity;
+		this.price = price;
+		this.course = course;
+		this.order = order;
 	}
 	
     // =========================
@@ -91,6 +106,21 @@ public class OrderItem {
 		this.course = course;
 	}
 	
+	/** Récupère la commande liée
+	 * @return commande
+	 */
+	public Order getOrder() {
+		return order;
+	}
+
+	/** Enregistre la commande liée
+	 * @param order commande
+	 */
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	
 	// =========================
     // MÉTHODES
     // =========================
@@ -102,6 +132,7 @@ public class OrderItem {
 	public String toString() {
 		return "OrderItem [quantity=" + quantity + ", price=" + price + ", course=" + course + "]";
 	}
+
 
 
 }
