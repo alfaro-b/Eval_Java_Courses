@@ -2,7 +2,9 @@ package fr.fms.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import fr.fms.entities.Order;
@@ -45,13 +47,20 @@ public class OrderDaoImpl implements OrderDao{
 	    String sql = "INSERT INTO orders (date, id_buyer, id_customer) "
 	               + "VALUES (?, ?, ?)";
 
-	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 	        ps.setDate(1, java.sql.Date.valueOf(order.getDate()));
 	        ps.setInt(2, order.getBuyer().getIdBuyer());
 	        ps.setInt(3, order.getCustomer().getIdCustomer());
 
 	        ps.executeUpdate();
+	        
+	        // Récupère l'ID créé en base par auto increment
+	        try(ResultSet rs = ps.getGeneratedKeys()) {
+	        	if (rs.next()) {
+	        		order.setIdOrder(rs.getInt(1));
+	        	}
+	        }
 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
