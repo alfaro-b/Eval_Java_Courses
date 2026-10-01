@@ -7,10 +7,22 @@ import java.util.Scanner;
 
 import fr.fms.business.CourseBusiness;
 import fr.fms.business.CourseBusinessImpl;
+import fr.fms.business.OrderBusiness;
+import fr.fms.business.OrderBusinessImpl;
+import fr.fms.dao.BuyerDao;
+import fr.fms.dao.BuyerDaoImpl;
 import fr.fms.dao.CourseDao;
 import fr.fms.dao.CourseDaoImpl;
+import fr.fms.dao.CustomerDao;
+import fr.fms.dao.CustomerDaoImpl;
 import fr.fms.dao.FormatDao;
 import fr.fms.dao.FormatDaoImpl;
+import fr.fms.dao.OrderDao;
+import fr.fms.dao.OrderDaoImpl;
+import fr.fms.dao.OrderItemDao;
+import fr.fms.dao.OrderItemDaoImpl;
+import fr.fms.entities.Buyer;
+import fr.fms.entities.Cart;
 import fr.fms.entities.Course;
 import fr.fms.entities.Format;
 
@@ -25,11 +37,26 @@ public class Main {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 
+		// Dépendances pour la gestion des formations
 		CourseDao courseDao = new CourseDaoImpl();
 		FormatDao formatDao = new FormatDaoImpl();
 
-		CourseBusiness business = new CourseBusinessImpl(courseDao, formatDao);
+		CourseBusiness courseBusiness = new CourseBusinessImpl(courseDao, formatDao);
+		
+		// Dépendances pour la gestion des commandes
+		BuyerDao buyerDao = new BuyerDaoImpl();
+		CustomerDao customerDao = new CustomerDaoImpl();
+		OrderDao orderDao = new OrderDaoImpl();
+		OrderItemDao orderItemDao = new OrderItemDaoImpl();
 
+		OrderBusiness orderBusiness = new OrderBusinessImpl(customerDao,buyerDao,orderItemDao,orderDao);
+
+		// Panier conservé en mémoire pendant l'exécution de l'application
+		Cart cart = new Cart();
+		
+		// Acheteur actuellement connecté, null si aucun utilisateur n'est connecté
+		Buyer connectedBuyer = null;
+		
 		boolean running = true;
 
 		while (running) {
@@ -44,7 +71,7 @@ public class Main {
 			    switch (choice) {
 			        case 1:
 			        	// Affichage de toutes les formations
-			            displayCourses(business.getAllCourses());
+			            displayCourses(courseBusiness.getAllCourses());
 			            break;
 	
 			        case 2:
@@ -54,7 +81,7 @@ public class Main {
 			    	    String keyword = scanner.nextLine();
 			    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
 			    	    try {
-			            displayCourses(business.findCoursesByKeyword(keyword));
+			            displayCourses(courseBusiness.findCoursesByKeyword(keyword));
 			    	    } catch(IllegalArgumentException e) {
 			    	    	System.out.println(e.getMessage());
 			    	    }
@@ -62,7 +89,7 @@ public class Main {
 	
 			        case 3:
 			            // Affichage des formations en fonction du format
-			        	List<Format> formats = business.getAllFormats();
+			        	List<Format> formats = courseBusiness.getAllFormats();
 			        	
 			        	System.out.println("\n===== RECHERCHE PAR FORMAT =====");
 			        	
@@ -95,7 +122,7 @@ public class Main {
 				    	    	}
 				    	    	
 				    	    	System.out.println("Voici la liste des formations : ");
-				    	    	displayCourses(business.findCoursesByFormat(selectedFormatId));
+				    	    	displayCourses(courseBusiness.findCoursesByFormat(selectedFormatId));
 				    	    	
 				    	    	validFormat = true;
 				    	    	
@@ -121,7 +148,8 @@ public class Main {
 			}
 		}
 
-		business.closeConnection();
+		courseBusiness.closeConnection();
+		orderBusiness.closeConnection();
 		scanner.close();
 
 	}
