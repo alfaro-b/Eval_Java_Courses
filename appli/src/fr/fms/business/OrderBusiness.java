@@ -14,6 +14,13 @@ public interface OrderBusiness {
      * @param buyer acheteur
      */
     void registerBuyer(Buyer buyer);
+    
+    /** Connecte un acheteur à partir de son login et mot de passe.
+     * @param login identifiant de connexion de l'acheteur
+     * @param password mot de passe de l'acheteur
+     * @return l'acheteur
+     */
+    public Buyer connectBuyer(String login, String password);
 
     
     /** Enregistre un client

@@ -78,6 +78,22 @@ public class OrderBusinessImpl implements  OrderBusiness {
 	public void registerBuyer(Buyer buyer) {
 		buyerDao.save(buyer, connection);
 	}
+	
+	/** Gère la connexion d'un acheteur : récupère l'acheteur par son login et vérifie son password
+	 * @param login identifiant de connexion de l'acheteur
+	 * @param password mot de passe de l'acheteur
+	 * @return acheteur connecté ou null si les identifiants sont incorrects
+	 */
+	@Override
+	public Buyer connectBuyer(String login, String password) {
+		Buyer buyer = buyerDao.findByLogin(login, connection);
+		
+		if (buyer != null && buyer.getPassword().equals(password)) {
+			return buyer;
+		}
+		return null;
+	}
+
 
 	/** Enregistre un client
 	 * @param customer client à enregistrer
@@ -114,5 +130,7 @@ public class OrderBusinessImpl implements  OrderBusiness {
 			e.printStackTrace();
 		}
 	}
+
+
 
 }
