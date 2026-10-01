@@ -133,7 +133,52 @@ public class Main {
 			    	    }
 			    	    
 			            break;
-	
+			            
+			        case 4 :
+			        	// Ajout d'une formation au panier
+			        	List<Course> courses = courseBusiness.getAllCourses();
+			        	
+			    		if (courses.isEmpty()) {
+			    			System.out.println("Aucune formation trouvée");
+			    			break;
+			    		}
+			    		
+			    	    for (Course course : courses) {
+			    	        System.out.print(course.getIdCourse() + " - ");
+			    	        System.out.println(course.getName());
+			    	    }
+			        	
+			        	System.out.println("Quelle formation souhaitez-vous ajouter au panier? (Saisissez le numéro) ");
+			        	int idCourse = scanner.nextInt();
+			        	scanner.nextLine();
+			        	
+			        	Course selectedCourse = null;
+
+			        	for(Course course : courses) {
+			        		if(course.getIdCourse() == idCourse) {
+			        			selectedCourse = course;
+			        			break;
+			        		}
+			        	}
+			        	
+			        	if (selectedCourse == null) {
+			        		System.out.println("Formation introuvable");
+			        		break;
+			        	}
+			        	
+			        	System.out.println("Saisissez la quantité souhaitée pour la formation " + selectedCourse.getName());
+			        	int quantity = scanner.nextInt();
+			        	scanner.nextLine();
+			        	
+			        	try {
+			        	    cart.addCourse(selectedCourse, quantity);
+			        	    System.out.println(cart.getItems());
+			        	} catch (IllegalArgumentException e) {
+			        	    System.out.println(e.getMessage());
+			        	}
+			        	
+			        	break;
+			        	
 			        case 0:
 			            running = false;
 			            break;
@@ -166,6 +211,7 @@ public class Main {
 	    System.out.println("1 - Afficher toutes les formations");
 	    System.out.println("2 - Rechercher une formation par mot-clé");
 	    System.out.println("3 - Afficher les formations par format");
+	    System.out.println("4 - Ajouter une formation au panier");
 	    System.out.println("0 - Quitter");
 	    System.out.print("Votre choix : ");
 	}
