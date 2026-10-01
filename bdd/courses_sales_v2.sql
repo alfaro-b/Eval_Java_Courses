@@ -112,12 +112,13 @@ VALUES
 
 -- ----- ORDER_ITEM -----
 CREATE TABLE order_item (
+    id_order_item INT PRIMARY KEY AUTO_INCREMENT,
     quantity INT NOT NULL,
     price DOUBLE NOT NULL,
     id_course INT NOT NULL,
     id_order INT NOT NULL,
 
-    PRIMARY KEY (id_order, id_course),
+    UNIQUE (id_order, id_course),
 
     FOREIGN KEY (id_course) REFERENCES course(id_course),
     FOREIGN KEY (id_order) REFERENCES orders(id_order)

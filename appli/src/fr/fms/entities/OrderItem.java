@@ -10,6 +10,7 @@ public class OrderItem {
 	// =========================
     // ATTRIBUTS
     // =========================
+	private int idOrderItem;
 	private int quantity;
 	private double price;
 	private Course course;
@@ -20,7 +21,7 @@ public class OrderItem {
 	
 	/** Crée une ligne de commande avec une quantité, un prix au moment de la commande et une formation.
 	 * @param quantity quantité commandée
-	 * @param price prix au moment de la comande
+	 * @param price prix au moment de la commande
 	 * @param course cours commandé
 	 * 
 	 */
@@ -33,6 +34,20 @@ public class OrderItem {
     // =========================
     // ACCESSEURS
     // =========================
+	
+	/** Récupère l'identifiant de la ligne de commande
+	 * @return identifiant de la ligne de commande
+	 */
+	public int getIdOrderItem() {
+		return idOrderItem;
+	}
+
+	/** Enregistre l'identifiant de la ligne de commande
+	 * @param idOrderItem identifiant de la ligne de commande
+	 */
+	public void setIdOrderItem(int idOrderItem) {
+		this.idOrderItem = idOrderItem;
+	}
 	
 	/** Récupère la quantité commandée
 	 * @return quantité commandée
@@ -87,5 +102,6 @@ public class OrderItem {
 	public String toString() {
 		return "OrderItem [quantity=" + quantity + ", price=" + price + ", course=" + course + "]";
 	}
+
 
 }
