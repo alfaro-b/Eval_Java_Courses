@@ -303,6 +303,52 @@ public class Main {
 	    }
 	} 
 	
+	/** Retire une quantité choisie d'une formation du panier
+	 * @param scanner scanner utilisé pour la saisie utilisateur
+	 * @param cart panier courant
+	 */
+	private static void removeCourseFromCart(Scanner scanner, Cart cart) {
+
+	    System.out.println("Quelle formation souhaitez-vous retirer du panier ?");
+	    int idCourse = scanner.nextInt();
+	    scanner.nextLine();
+
+	    OrderItem selectedItem = null;
+
+	    // Recherche la ligne correspondant à l'identifiant de formation saisi
+	    for (OrderItem orderItem : cart.getItems()) {
+	        if (orderItem.getCourse().getIdCourse() == idCourse) {
+	            selectedItem = orderItem;
+	            break;
+	        }
+	    }
+
+	    if (selectedItem == null) {
+	        System.out.println("Formation introuvable.");
+	        return;
+	    }
+
+	    System.out.println(
+	        "Saisissez la quantité que vous souhaitez retirer pour "
+	        + selectedItem.getCourse().getName()
+	    );
+
+	    int quantity = scanner.nextInt();
+	    scanner.nextLine();
+
+	    try {
+	        cart.removeCourse(selectedItem.getCourse(), quantity);
+
+	        System.out.println(
+	            "Quantité retirée pour la formation "
+	            + selectedItem.getCourse().getName()
+	        );
+	    } catch (IllegalArgumentException e) {
+	        System.out.println(e.getMessage());
+	    }
+	}
+	    
+	
 	/**
 	 * Affiche le contenu du panier ainsi que son montant total.
 	 *
