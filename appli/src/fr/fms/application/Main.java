@@ -25,6 +25,7 @@ import fr.fms.entities.Buyer;
 import fr.fms.entities.Cart;
 import fr.fms.entities.Course;
 import fr.fms.entities.Format;
+import fr.fms.entities.OrderItem;
 
 /** Point d'entrée de l'application de gestion des formations.
  * Permet à l'utilisateur d'accéder aux différentes fonctionnalités disponibles depuis le menu principal.
@@ -145,7 +146,7 @@ public class Main {
 			    		
 			    	    for (Course course : courses) {
 			    	        System.out.print(course.getIdCourse() + " - ");
-			    	        System.out.println(course.getName());
+			    	        System.out.println(course.getName() + " - " + course.getPrice() + " € ");
 			    	    }
 			        	
 			        	System.out.println("Quelle formation souhaitez-vous ajouter au panier? (Saisissez le numéro) ");
@@ -172,11 +173,30 @@ public class Main {
 			        	
 			        	try {
 			        	    cart.addCourse(selectedCourse, quantity);
-			        	    System.out.println(cart.getItems());
+			        	    System.out.println("Formation " + selectedCourse.getName() + " ajouté au panier.");
 			        	} catch (IllegalArgumentException e) {
 			        	    System.out.println(e.getMessage());
 			        	}
 			        	
+			        	break;
+			        	
+			        case 5:
+			        	// Affichage du panier
+			            if (cart.isEmpty()) {
+			                System.out.println("Votre panier est vide.");
+			                break;
+			            }
+			            
+			        	System.out.println("\n===== VOTRE PANIER =====");
+			        	double total = 0;
+			        	for(OrderItem orderItem : cart.getItems()) {
+			        		total += orderItem.getPrice()*orderItem.getQuantity();
+			        		System.out.println(orderItem.getCourse().getName() + " " 
+			        							+ orderItem.getPrice() + " € x "
+			        							+ orderItem.getQuantity() + " = " 
+			        							+ orderItem.getPrice()*orderItem.getQuantity() + " € " );
+			        	}
+			        	System.out.println("TOTAL : " + total + " € ");
 			        	break;
 			        	
 			        case 0:
@@ -212,8 +232,10 @@ public class Main {
 	    System.out.println("2 - Rechercher une formation par mot-clé");
 	    System.out.println("3 - Afficher les formations par format");
 	    System.out.println("4 - Ajouter une formation au panier");
+	    System.out.println("5 - Afficher le panier");
 	    System.out.println("0 - Quitter");
 	    System.out.print("Votre choix : ");
+	    System.out.println("====================================");
 	}
 	
 	/** Affiche une liste de formations
