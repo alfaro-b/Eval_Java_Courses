@@ -144,17 +144,43 @@ public class Main {
 			    	    }
 			    	    
 			            break;
-			            
-			        				        	
+			        				        
 			        case 4:
-			        	// Affichage et gestion du panier 
+			            // Affichage et gestion du panier
 			            displayCart(cart);
+			            displayCartMenu();
 
-			            if (!cart.isEmpty()) {
-			                System.out.println("1 - Ajouter une formation");
-			                System.out.println("2 - Retirer une formation");
-			                System.out.println("3 - Passer commande");
-			                System.out.println("0 - Retour");
+			            int cartChoice = scanner.nextInt();
+			            scanner.nextLine();
+
+			            switch (cartChoice) {
+			                case 1:
+			                    List<Course> availableCourses = courseBusiness.getAllCourses();
+			                    displayCourseSummary(availableCourses);
+			                    addCourseToCart(scanner, availableCourses, cart);
+			                    break;
+
+			                case 2:
+			                    if (cart.isEmpty()) {
+			                        System.out.println("Votre panier est vide.");
+			                        break;
+			                    }
+			                    removeCourseFromCart(scanner, cart);
+			                    break;
+
+			                case 3:
+			                    if (cart.isEmpty()) {
+			                        System.out.println("Votre panier est vide.");
+			                        break;
+			                    }
+			                    // passer commande
+			                    break;
+
+			                case 0:
+			                    break;
+
+			                default:
+			                    System.out.println("Choix invalide.");
 			            }
 
 			            break;
@@ -197,6 +223,17 @@ public class Main {
 	    System.out.println("====================================");
 	}
 	
+	/** Affiche le sous menu du panier
+	 */
+	private static void displayCartMenu() {
+	    System.out.println("\n===== GESTION DU PANIER =====");
+	    System.out.println("1 - Ajouter une formation");
+	    System.out.println("2 - Retirer une formation");
+	    System.out.println("3 - Passer commande");
+	    System.out.println("0 - Retour au menu principal");
+	    System.out.print("Votre choix : ");
+	}
+	
 	/** Affiche une liste de formations
 	 * @param courses liste des formations à afficher
 	 */
@@ -221,6 +258,21 @@ public class Main {
 	        System.out.println("Formats : " + String.join(", ", formatNames));
 
 	        System.out.println();
+	    }
+	}
+	
+	/** Affiche les formations avec leur id, nom et prix
+	 * @param courses liste de formations
+	 */
+	private static void displayCourseSummary(List<Course> courses) {
+
+	    if (courses.isEmpty()) {
+	        System.out.println("Aucune formation disponible.");
+	        return;
+	    }
+
+	    for (Course course : courses) {
+	        System.out.println(course.getIdCourse() + " - " + course.getName() + " - " + course.getPrice() + " €");
 	    }
 	}
 	
