@@ -2,7 +2,9 @@ package fr.fms.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import fr.fms.entities.Customer;
@@ -45,7 +47,7 @@ public class CustomerDaoImpl implements CustomerDao{
 	    String sql = "INSERT INTO customer (last_name, first_name, email, address, phone) "
 	               + "VALUES (?, ?, ?, ?, ?)";
 
-	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 	        ps.setString(1, customer.getLastName());
 	        ps.setString(2, customer.getFirstName());
@@ -54,6 +56,13 @@ public class CustomerDaoImpl implements CustomerDao{
 	        ps.setString(5, customer.getPhone());
 
 	        ps.executeUpdate();
+	        
+	        // Récupère l'ID créé en base par auto increment
+	        try (ResultSet rs = ps.getGeneratedKeys()) {
+	            if (rs.next()) {
+	                customer.setIdCustomer(rs.getInt(1));
+	            }
+	        }
 
 	    } catch (SQLException e) {
 	        e.printStackTrace();

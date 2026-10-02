@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import fr.fms.entities.Buyer;
@@ -47,13 +48,20 @@ public class BuyerDaoImpl implements BuyerDao{
 	    String sql = "INSERT INTO buyer (name, login, password) "
 	               + "VALUES (?, ?, ?)";
 
-	    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+	    try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
 	        ps.setString(1, buyer.getName());
 	        ps.setString(2, buyer.getLogin());
 	        ps.setString(3, buyer.getPassword());
 
 	        ps.executeUpdate();
+	        
+	        // Récupère l'ID créé en base par auto increment
+	        try (ResultSet rs = ps.getGeneratedKeys()) {
+	            if (rs.next()) {
+	                buyer.setIdBuyer(rs.getInt(1));
+	            }
+	        }
 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
