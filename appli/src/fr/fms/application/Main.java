@@ -72,7 +72,11 @@ public class Main {
 			    switch (choice) {
 			        case 1:
 			        	// Affichage de toutes les formations
-			            displayCourses(courseBusiness.getAllCourses());
+			            List<Course> courses = courseBusiness.getAllCourses();
+
+			            displayCourses(courses);
+
+			            askAddToCart(scanner, courses, cart);
 			            break;
 	
 			        case 2:
@@ -82,7 +86,10 @@ public class Main {
 			    	    String keyword = scanner.nextLine();
 			    	    System.out.println("Voici la liste des formations contenant '" + keyword + "' : ");
 			    	    try {
-			            displayCourses(courseBusiness.findCoursesByKeyword(keyword));
+			            List<Course> foundCourses = courseBusiness.findCoursesByKeyword(keyword);
+			            displayCourses(foundCourses);
+			            
+			            askAddToCart(scanner, foundCourses, cart);
 			    	    } catch(IllegalArgumentException e) {
 			    	    	System.out.println(e.getMessage());
 			    	    }
@@ -122,8 +129,11 @@ public class Main {
 				    	    		continue;
 				    	    	}
 				    	    	
-				    	    	System.out.println("Voici la liste des formations : ");
-				    	    	displayCourses(courseBusiness.findCoursesByFormat(selectedFormatId));
+				    	    	System.out.println("Voici la liste des formations : ");				    	    	
+				    	    	List<Course> foundCoursesByFormat = courseBusiness.findCoursesByFormat(selectedFormatId);
+				    	    	displayCourses(foundCoursesByFormat);
+				    	    	
+				    	    	askAddToCart(scanner, foundCoursesByFormat, cart);
 				    	    	
 				    	    	validFormat = true;
 				    	    	
@@ -135,69 +145,19 @@ public class Main {
 			    	    
 			            break;
 			            
-			        case 4 :
-			        	// Ajout d'une formation au panier
-			        	List<Course> courses = courseBusiness.getAllCourses();
-			        	
-			    		if (courses.isEmpty()) {
-			    			System.out.println("Aucune formation trouvée");
-			    			break;
-			    		}
-			    		
-			    	    for (Course course : courses) {
-			    	        System.out.print(course.getIdCourse() + " - ");
-			    	        System.out.println(course.getName() + " - " + course.getPrice() + " € ");
-			    	    }
-			        	
-			        	System.out.println("Quelle formation souhaitez-vous ajouter au panier? (Saisissez le numéro) ");
-			        	int idCourse = scanner.nextInt();
-			        	scanner.nextLine();
-			        	
-			        	Course selectedCourse = null;
+			        				        	
+			        case 4:
+			        	// Affichage et gestion du panier 
+			            displayCart(cart);
 
-			        	for(Course course : courses) {
-			        		if(course.getIdCourse() == idCourse) {
-			        			selectedCourse = course;
-			        			break;
-			        		}
-			        	}
-			        	
-			        	if (selectedCourse == null) {
-			        		System.out.println("Formation introuvable");
-			        		break;
-			        	}
-			        	
-			        	System.out.println("Saisissez la quantité souhaitée pour la formation " + selectedCourse.getName());
-			        	int quantity = scanner.nextInt();
-			        	scanner.nextLine();
-			        	
-			        	try {
-			        	    cart.addCourse(selectedCourse, quantity);
-			        	    System.out.println("Formation " + selectedCourse.getName() + " ajouté au panier.");
-			        	} catch (IllegalArgumentException e) {
-			        	    System.out.println(e.getMessage());
-			        	}
-			        	
-			        	break;
-			        	
-			        case 5:
-			        	// Affichage du panier
-			            if (cart.isEmpty()) {
-			                System.out.println("Votre panier est vide.");
-			                break;
+			            if (!cart.isEmpty()) {
+			                System.out.println("1 - Ajouter une formation");
+			                System.out.println("2 - Retirer une formation");
+			                System.out.println("3 - Passer commande");
+			                System.out.println("0 - Retour");
 			            }
-			            
-			        	System.out.println("\n===== VOTRE PANIER =====");
-			        	double total = 0;
-			        	for(OrderItem orderItem : cart.getItems()) {
-			        		total += orderItem.getPrice()*orderItem.getQuantity();
-			        		System.out.println(orderItem.getCourse().getName() + " " 
-			        							+ orderItem.getPrice() + " € x "
-			        							+ orderItem.getQuantity() + " = " 
-			        							+ orderItem.getPrice()*orderItem.getQuantity() + " € " );
-			        	}
-			        	System.out.println("TOTAL : " + total + " € ");
-			        	break;
+
+			            break;
 			        	
 			        case 0:
 			            running = false;
@@ -231,8 +191,7 @@ public class Main {
 	    System.out.println("1 - Afficher toutes les formations");
 	    System.out.println("2 - Rechercher une formation par mot-clé");
 	    System.out.println("3 - Afficher les formations par format");
-	    System.out.println("4 - Ajouter une formation au panier");
-	    System.out.println("5 - Afficher le panier");
+	    System.out.println("4 - Afficher / gérer le panier");
 	    System.out.println("0 - Quitter");
 	    System.out.print("Votre choix : ");
 	    System.out.println("====================================");
@@ -250,7 +209,7 @@ public class Main {
 		
 	    for (Course course : courses) {
 	        System.out.println("----------------------------------");
-	        System.out.println(course.getName());
+	        System.out.println("N°" + course.getIdCourse() + " - " + course.getName());
 	        System.out.println("Description : " + course.getDescription());
 	        System.out.println("Durée : " + course.getDuration() + " jours");
 	        System.out.println("Prix : " + course.getPrice() + " €");
@@ -263,5 +222,119 @@ public class Main {
 
 	        System.out.println();
 	    }
+	}
+	
+	/**
+	 * Propose à l'utilisateur d'ajouter une formation au panier.
+	 *
+	 * @param scanner scanner utilisé pour la saisie utilisateur
+	 * @param courses liste des formations affichées
+	 * @param cart panier courant
+	 */
+	private static void askAddToCart(
+	        Scanner scanner,
+	        List<Course> courses,
+	        Cart cart) {
+
+	    if (courses.isEmpty()) {
+	        return;
+	    }
+
+	    System.out.println("1 - Ajouter une formation au panier");
+	    System.out.println("0 - Retour au menu principal");
+
+	    int choice = scanner.nextInt();
+	    scanner.nextLine();
+
+	    if (choice == 1) {
+	        addCourseToCart(scanner, courses, cart);
+	    }
+	}
+	
+	/**
+	 * Ajoute au panier une formation choisie parmi une liste affichée.
+	 *
+	 * @param scanner scanner utilisé pour la saisie utilisateur
+	 * @param courses liste des formations disponibles
+	 * @param cart panier courant
+	 */
+	private static void addCourseToCart(Scanner scanner, List<Course> courses, Cart cart) {
+
+	    if (courses.isEmpty()) {
+	        return;
+	    }
+
+	    System.out.println("Quelle formation souhaitez-vous ajouter au panier ?");
+	    int idCourse = scanner.nextInt();
+	    scanner.nextLine();
+
+	    Course selectedCourse = null;
+
+	    // Recherche la formation correspondant à l'identifiant saisi
+	    for (Course course : courses) {
+	        if (course.getIdCourse() == idCourse) {
+	            selectedCourse = course;
+	            break;
+	        }
+	    }
+
+	    if (selectedCourse == null) {
+	        System.out.println("Formation introuvable.");
+	        return;
+	    }
+
+	    System.out.println(
+	        "Saisissez la quantité souhaitée pour "
+	        + selectedCourse.getName()
+	    );
+
+	    int quantity = scanner.nextInt();
+	    scanner.nextLine();
+
+	    try {
+	    	// Ajoute la formation au panier avec la quantité demandée
+	        cart.addCourse(selectedCourse, quantity);
+	        System.out.println(
+	            "Formation " + selectedCourse.getName()
+	            + " ajoutée au panier."
+	        );
+	    } catch (IllegalArgumentException e) {
+	        System.out.println(e.getMessage());
+	    }
+	} 
+	
+	/**
+	 * Affiche le contenu du panier ainsi que son montant total.
+	 *
+	 * @param cart panier à afficher
+	 */
+	private static void displayCart(Cart cart) {
+
+	    if (cart.isEmpty()) {
+	        System.out.println("Votre panier est vide.");
+	        return;
+	    }
+
+	    System.out.println("\n===== VOTRE PANIER =====");
+
+	    double total = 0;
+
+	    for (OrderItem orderItem : cart.getItems()) {
+
+	        double lineTotal =
+	            orderItem.getPrice() * orderItem.getQuantity();
+
+	        total += lineTotal;
+
+	        System.out.println(
+	            "N°" + orderItem.getCourse().getIdCourse()
+	            + " - " + orderItem.getCourse().getName()
+	            + " - " + orderItem.getPrice() + " € x "
+	            + orderItem.getQuantity()
+	            + " = " + lineTotal + " €"
+	        );
+	    }
+
+	    System.out.println("TOTAL : " + total + " €");
 	}
 }
